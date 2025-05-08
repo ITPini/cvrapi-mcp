@@ -8,7 +8,7 @@ It includes rate limiting, caching, and compliance with CVRAPI terms.
 
 Configuration is handled through environment variables:
 - CVRAPI_BASE_URL: API base URL (default: https://cvrapi.dk/api)
-- CVRAPI_USER_AGENT: User agent string (REQUIRED - your company and project name)
+- CVRAPI_USER_AGENT: User agent string (REQUIRED: [COMPANY_NAME] - [PROJECT_NAME] - [CONTACT_NAME] [CONTACT_EMAIL/PHONE])
 - CVRAPI_COUNTRY: Country code (default: dk)
 - CVRAPI_FORMAT: Output format (default: json)
 - CVRAPI_TOKEN: Optional API token
