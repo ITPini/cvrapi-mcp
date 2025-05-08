@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-CVRAPI MCP Server
+CVR API MCP Server
 
 This server implements the Model Context Protocol (MCP) to provide
-Danish business registry data to language models through the CVRAPI.
-It includes rate limiting, caching, and compliance with CVRAPI terms.
+Danish business registry data to language models through the CVR API.
+It includes rate limiting, caching, and compliance with CVR API terms.
 
 Configuration is handled through environment variables:
 - CVRAPI_BASE_URL: API base URL (default: https://cvrapi.dk/api)
@@ -154,7 +154,7 @@ class RateLimiter:
 
 
 class CVRAPIClient:
-    """Client for interacting with the CVRAPI."""
+    """Client for interacting with the CVR API."""
 
     def __init__(
         self,
@@ -166,7 +166,7 @@ class CVRAPIClient:
         cache: Optional[ResponseCache] = None,
         rate_limiter: Optional[RateLimiter] = None,
     ):
-        """Initialize the CVRAPI client.
+        """Initialize the CVR API client.
         
         Args:
             base_url: The base URL for the API
@@ -194,7 +194,7 @@ class CVRAPIClient:
         await self.client.aclose()
 
     async def _make_request(self, params: Dict[str, Any]) -> Dict[str, Any]:
-        """Make a request to the CVRAPI with proper error handling.
+        """Make a request to the CVR API with proper error handling.
         
         This method handles all API interactions, including:
         - Cache checking
@@ -495,7 +495,7 @@ async def lifespan(server: FastMCP) -> AppContext:
     # Load configuration from environment variables
     user_agent = os.environ.get("CVRAPI_USER_AGENT")
 
-    # CRITICAL: Validate User-Agent - this is required for CVRAPI
+    # CRITICAL: Validate User-Agent - this is required for CVR API
     if not user_agent:
         logger.error("CVRAPI_USER_AGENT environment variable not set! Cannot continue.")
         print("Error: CVRAPI_USER_AGENT environment variable must be set.")
@@ -562,7 +562,7 @@ async def lifespan(server: FastMCP) -> AppContext:
 # Initialize MCP server
 mcp = FastMCP(
     name="CVRAPI-mcp",
-    description="MCP server for interacting with the CVRAPI",
+    description="MCP server for interacting with the CVR API",
     version="1.0.0",
     lifespan=lifespan,
     dependencies=["httpx"]
@@ -811,13 +811,13 @@ async def get_api_status() -> str:
 
 @mcp.resource("api://terms")
 async def get_api_terms() -> str:
-    """Get the CVRAPI terms and usage notice."""
+    """Get the CVR API terms and usage notice."""
     return """
 Danish CVR API Terms and Usage:
 
 1. Daily Request Limit: 
    - Free tier: 50 requests per day
-   - Contact CVRAPI for higher limits
+   - Contact CVR API for higher limits
 
 2. User-Agent Requirements:
    - Must include your company name and project
