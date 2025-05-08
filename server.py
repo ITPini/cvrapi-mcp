@@ -15,7 +15,7 @@ Configuration is handled through environment variables:
 - CVRAPI_RATE_LIMIT: Daily request limit (default: 50)
 - CVRAPI_COOLDOWN: Cooldown period in seconds (default: 86400)
 - CACHE_ENABLED: Enable caching (default: true)
-- CACHE_EXPIRATION: Cache expiration in seconds (default: 604800)
+- CACHE_EXPIRATION: Cache expiration in seconds (default: 43200)
 """
 
 import hashlib
@@ -53,12 +53,12 @@ class AppContext:
 class ResponseCache:
     """Simple in-memory cache for API responses to avoid redundant requests."""
 
-    def __init__(self, enabled: bool = True, expiration: int = 604800):
+    def __init__(self, enabled: bool = True, expiration: int = 43200):
         """Initialize the cache.
         
         Args:
             enabled: Whether caching is enabled
-            expiration: Cache TTL in seconds (default: 7 days)
+            expiration: Cache TTL in seconds (default: 12 hours)
         """
         self.enabled = enabled
         self.expiration = expiration
@@ -516,7 +516,7 @@ async def lifespan(server: FastMCP) -> AppContext:
         },
         "cache": {
             "enabled": get_env_bool("CACHE_ENABLED", True),
-            "expiration": get_env_int("CACHE_EXPIRATION", 604800),
+            "expiration": get_env_int("CACHE_EXPIRATION", 43200),
         },
     }
 
