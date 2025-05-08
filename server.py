@@ -28,9 +28,11 @@ import time
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional, Union, Any
+from collections.abc import AsyncGenerator
 
 import httpx
+from mcp.types import ToolResult, ResourceContent
 from mcp.server.fastmcp import Context, FastMCP
 
 # Configure logging
@@ -355,7 +357,7 @@ class CVRAPIClient:
         data = await self._make_request(params)
         return self._process_response(data, fields)
 
-    async def general_search(self, search_term: str, fields: Optional[List[str]] = None) -> Dict[str, Any]:
+    async def general_search(self, search_term: str, fields: Optional[List[str]] = None) -> Union[Dict[str, Any], List[Dict[str, Any]]]:
         """General search that can match CVR, P-number, or company name.
         
         Args:
@@ -490,7 +492,7 @@ def get_env_int(name: str, default: int) -> int:
 # Setup FastMCP Server
 
 @asynccontextmanager
-async def lifespan(server: FastMCP) -> AppContext:
+async def lifespan(server: FastMCP) -> AsyncGenerator[AppContext, None]:
     """Application lifespan manager for startup and shutdown."""
     # Load configuration from environment variables
     user_agent = os.environ.get("CVRAPI_USER_AGENT")
@@ -576,7 +578,7 @@ async def lookup_by_cvr(
     fields: Optional[List[str]] = None,
     optimize_tokens: bool = False,
     max_tokens: int = 500,
-) -> Dict[str, Any]:
+) -> ToolResult:
     """Look up a company by its CVR number.
     
     Args:
@@ -797,7 +799,7 @@ async def get_company_ownership(
 
 
 @mcp.resource("api://status")
-async def get_api_status() -> str:
+async def get_api_status() -> ResourceContent:
     """Get the current API status and usage statistics."""
     rate_limiter = mcp.runtime.lifespan_context.rate_limiter
     stats = rate_limiter.get_usage_stats()
