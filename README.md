@@ -1,4 +1,4 @@
-# cvrapi-mcp Server
+# CVRAPI-mcp Server
 
 Model Context Protocol (MCP) server for accessing CVR API, allowing large language models to retrieve and work with Danish business registry data.
 
